@@ -27,11 +27,12 @@ Depois de publicar a API, adicione ao README do seu perfil:
 
 ```md
 ![GitHub Stats](https://SEU-DOMINIO/SEU-USUARIO?theme=dark)
+![Linguagens mais usadas](https://SEU-DOMINIO/SEU-USUARIO/languages?theme=dark)
 ```
 
 Temas disponíveis: `dark` (padrão) e `light`.
 
-O card mostra repositórios públicos, total de estrelas recebidas, seguidores, contas seguidas e as cinco linguagens mais usadas. As proporções de linguagem são calculadas pelos bytes de código informados pela API do GitHub. O resultado fica em cache por 15 minutos para reduzir chamadas à API do GitHub.
+O card geral mostra repositórios públicos, total de estrelas recebidas, seguidores e contas seguidas. O endpoint `/SEU-USUARIO/languages` gera um segundo card com as cinco linguagens mais usadas e suas proporções, calculadas pelos bytes de código informados pela API do GitHub. O resultado fica em cache por 15 minutos para reduzir chamadas à API do GitHub.
 
 ## Testes
 

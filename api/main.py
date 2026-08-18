@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import asyncio
 import html
 import os
@@ -17,6 +18,25 @@ app = FastAPI(title="Git Stats", version="0.1.0")
 
 GITHUB_API = "https://api.github.com"
 CACHE_TTL_SECONDS = 15 * 60
+LANGUAGE_COLORS = {
+    "Python": "#3572A5",
+    "JavaScript": "#F1E05A",
+    "TypeScript": "#3178C6",
+    "HTML": "#E34C26",
+    "CSS": "#563D7C",
+    "Java": "#B07219",
+    "C#": "#178600",
+    "C++": "#F34B7D",
+    "C": "#555555",
+    "Go": "#00ADD8",
+    "Rust": "#DEA584",
+    "PHP": "#4F5D95",
+    "Ruby": "#701516",
+    "Kotlin": "#A97BFF",
+    "Swift": "#F05138",
+    "Shell": "#89E051",
+    "Dart": "#00B4AB",
+}
 
 
 @dataclass
@@ -99,7 +119,7 @@ async def get_github_stats(username: str) -> dict[str, Any]:
     return stats
 
 
-def card_svg(stats: dict[str, Any], theme: str) -> str:
+def general_card_svg(stats: dict[str, Any], theme: str) -> str:
     palettes = {
         "dark": {"background": "#0d1117", "border": "#30363d", "text": "#f0f6fc", "muted": "#8b949e", "accent": "#58a6ff"},
         "light": {"background": "#ffffff", "border": "#d0d7de", "text": "#24292f", "muted": "#57606a", "accent": "#0969da"},
@@ -118,31 +138,69 @@ def card_svg(stats: dict[str, Any], theme: str) -> str:
         f'<text x="372" y="{118 + index * 32}" text-anchor="end" class="value">{value:,}</text>'
         for index, (label, value) in enumerate(rows)
     )
+
     language_rows = "".join(
         f'<text x="28" y="{287 + index * 27}" class="label">{html.escape(language["name"])}</text>'
         f'<rect x="155" y="{276 + index * 27}" width="180" height="8" rx="4" fill="{colors["border"]}"/>'
-        f'<rect x="155" y="{276 + index * 27}" width="{180 * language["percentage"] / 100:.1f}" height="8" rx="4" fill="{colors["accent"]}"/>'
+        f'<rect x="155" y="{276 + index * 27}" width="{180 * language["percentage"] / 100:.1f}" height="8" rx="4" fill="{language_color(language["name"])}"/>'
         f'<text x="372" y="{287 + index * 27}" text-anchor="end" class="value">{language["percentage"]:.1f}%</text>'
         for index, language in enumerate(stats["languages"])
     ) or f'<text x="28" y="287" class="label">Nenhuma linguagem detectada em repositórios públicos.</text>'
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="400" height="460" role="img" aria-label="Estatísticas de {username}">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" role="img" aria-label="General statistics for {username}">
   <style>
     .title {{ font: 700 20px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: {colors["text"]}; }}
     .handle {{ font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: {colors["muted"]}; }}
     .label {{ font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: {colors["muted"]}; }}
     .value {{ font: 700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: {colors["text"]}; }}
   </style>
-  <rect x="0.5" y="0.5" width="399" height="459" rx="12" fill="{colors["background"]}" stroke="{colors["border"]}"/>
+  <rect x="0.5" y="0.5" width="399" height="259" rx="12" fill="{colors["background"]}" stroke="{colors["border"]}"/>
   <rect x="28" y="30" width="5" height="45" rx="2.5" fill="{colors["accent"]}"/>
   <text x="47" y="50" class="title">{name}</text>
   <text x="47" y="70" class="handle">@{username}</text>
   <line x1="28" y1="90" x2="372" y2="90" stroke="{colors["border"]}"/>
   {rendered_rows}
-  <line x1="28" y1="252" x2="372" y2="252" stroke="{colors["border"]}"/>
-  <text x="28" y="278" class="title">Linguagens mais usadas</text>
-  {language_rows}
-  <text x="28" y="438" class="handle">Atualizado pela API do GitHub</text>
+  <text x="28" y="238" class="handle">Atualizado pela API do GitHub</text>
 </svg>'''
+
+
+def languages_card_svg(stats: dict[str, Any], theme: str) -> str:
+    palettes = {
+        "dark": {"background": "#0d1117", "border": "#30363d", "text": "#f0f6fc", "muted": "#8b949e"},
+        "light": {"background": "#ffffff", "border": "#d0d7de", "text": "#24292f", "muted": "#57606a"},
+    }
+    colors = palettes[theme]
+    username = html.escape(stats["username"])
+    language_rows = "".join(
+        f'<text x="28" y="{108 + index * 27}" class="label">{html.escape(language["name"])}</text>'
+        f'<rect x="155" y="{97 + index * 27}" width="180" height="8" rx="4" fill="{colors["border"]}"/>'
+        f'<rect x="155" y="{97 + index * 27}" width="{180 * language["percentage"] / 100:.1f}" height="8" rx="4" fill="{language_color(language["name"])}"/>'
+        f'<text x="372" y="{108 + index * 27}" text-anchor="end" class="value">{language["percentage"]:.1f}%</text>'
+        for index, language in enumerate(stats["languages"])
+    ) or '<text x="28" y="108" class="label">No language data found.</text>'
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280" role="img" aria-label="Most used languages for {username}">
+  <style>
+    .title {{ font: 700 20px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: {colors["text"]}; }}
+    .handle {{ font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: {colors["muted"]}; }}
+    .label {{ font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: {colors["muted"]}; }}
+    .value {{ font: 700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: {colors["text"]}; }}
+  </style>
+  <rect x="0.5" y="0.5" width="399" height="279" rx="12" fill="{colors["background"]}" stroke="{colors["border"]}"/>
+  <text x="28" y="48" class="title">Linguagens mais usadas</text>
+  <text x="28" y="70" class="handle">@{username}</text>
+  <line x1="28" y1="82" x2="372" y2="82" stroke="{colors["border"]}"/>
+  {language_rows}
+  <text x="28" y="258" class="handle">Atualizado pela API do GitHub</text>
+</svg>'''
+
+
+def language_color(language: str) -> str:
+    known_color = LANGUAGE_COLORS.get(language)
+    if known_color:
+        return known_color
+
+    digest = hashlib.sha256(language.encode("utf-8")).hexdigest()
+    hue = int(digest[:8], 16) % 360
+    return f"hsl({hue}, 65%, 55%)"
 
 
 @app.get("/health")
@@ -154,7 +212,17 @@ async def health() -> dict[str, str]:
 async def stats_card(username: str, theme: str = Query("dark", pattern="^(dark|light)$")) -> Response:
     stats = await get_github_stats(username)
     return Response(
-        content=card_svg(stats, theme),
+        content=general_card_svg(stats, theme),
+        media_type="image/svg+xml",
+        headers={"Cache-Control": "public, max-age=900"},
+    )
+
+
+@app.get("/{username}/languages", response_class=Response)
+async def languages_card(username: str, theme: str = Query("dark", pattern="^(dark|light)$")) -> Response:
+    stats = await get_github_stats(username)
+    return Response(
+        content=languages_card_svg(stats, theme),
         media_type="image/svg+xml",
         headers={"Cache-Control": "public, max-age=900"},
     )
