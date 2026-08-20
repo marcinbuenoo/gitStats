@@ -21,18 +21,24 @@ $env:GITHUB_TOKEN = "seu_token"
 
 Nunca versiona esse token; use as variáveis de ambiente da plataforma de hospedagem.
 
+## Cards estáticos no GitHub Actions
+
+O workflow `.github/workflows/update-cards.yml` gera os cards a cada seis horas e os salva em `assets/`. Ele usa o `GITHUB_TOKEN` temporário do próprio Actions, sem publicar uma API ou expor um token pessoal.
+
+Por padrão, o workflow usa o dono do repositório como usuário. Para gerar cards de outro perfil, crie a variável de repositório `GITHUB_USERNAME` em **Settings > Secrets and variables > Actions > Variables**. Execute o workflow uma vez em **Actions > Update GitHub cards > Run workflow**.
+
 ## Uso no README
 
-Depois de publicar a API, adicione ao README do seu perfil:
+Depois que o workflow gerar os arquivos, adicione ao README do seu perfil:
 
 ```md
-![GitHub Stats](https://SEU-DOMINIO/SEU-USUARIO?theme=dark)
-![Linguagens mais usadas](https://SEU-DOMINIO/SEU-USUARIO/languages?theme=dark)
+![GitHub Stats](https://raw.githubusercontent.com/SEU-USUARIO/gitStats/master/assets/github-stats.svg)
+![Linguagens mais usadas](https://raw.githubusercontent.com/SEU-USUARIO/gitStats/master/assets/github-languages.svg)
 ```
 
 Temas disponíveis: `dark` (padrão) e `light`.
 
-O card geral mostra repositórios públicos, total de estrelas recebidas, seguidores e contas seguidas. O endpoint `/SEU-USUARIO/languages` gera um segundo card com as cinco linguagens mais usadas e suas proporções, calculadas pelos bytes de código informados pela API do GitHub. O resultado fica em cache por 15 minutos para reduzir chamadas à API do GitHub.
+O card geral mostra repositórios públicos, total de estrelas recebidas, seguidores e contas seguidas. O segundo card mostra as cinco linguagens mais usadas e suas proporções, calculadas pelos bytes de código informados pela API do GitHub. Os arquivos são atualizados pelo workflow a cada seis horas.
 
 ## Testes
 
