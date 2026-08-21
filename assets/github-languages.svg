@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280" role="img" aria-label="Most used languages for marcinbuenoo">
+  <style>
+    .title { font: 700 20px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: #f0f6fc; }
+    .handle { font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: #8b949e; }
+    .label { font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: #8b949e; }
+    .value { font: 700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: #f0f6fc; }
+  </style>
+  <rect x="0.5" y="0.5" width="399" height="279" rx="12" fill="#0d1117" stroke="#30363d"/>
+  <text x="28" y="48" class="title">Linguagens mais usadas</text>
+  <text x="28" y="70" class="handle">@marcinbuenoo</text>
+  <line x1="28" y1="82" x2="372" y2="82" stroke="#30363d"/>
+  <text x="28" y="108" class="label">HTML</text><rect x="155" y="97" width="180" height="8" rx="4" fill="#30363d"/><rect x="155" y="97" width="61.7" height="8" rx="4" fill="#E34C26"/><text x="372" y="108" text-anchor="end" class="value">34.3%</text><text x="28" y="135" class="label">TypeScript</text><rect x="155" y="124" width="180" height="8" rx="4" fill="#30363d"/><rect x="155" y="124" width="40.3" height="8" rx="4" fill="#3178C6"/><text x="372" y="135" text-anchor="end" class="value">22.4%</text><text x="28" y="162" class="label">JavaScript</text><rect x="155" y="151" width="180" height="8" rx="4" fill="#30363d"/><rect x="155" y="151" width="32.0" height="8" rx="4" fill="#F1E05A"/><text x="372" y="162" text-anchor="end" class="value">17.8%</text><text x="28" y="189" class="label">CSS</text><rect x="155" y="178" width="180" height="8" rx="4" fill="#30363d"/><rect x="155" y="178" width="31.3" height="8" rx="4" fill="#563D7C"/><text x="372" y="189" text-anchor="end" class="value">17.4%</text><text x="28" y="216" class="label">Python</text><rect x="155" y="205" width="180" height="8" rx="4" fill="#30363d"/><rect x="155" y="205" width="5.8" height="8" rx="4" fill="#3572A5"/><text x="372" y="216" text-anchor="end" class="value">3.2%</text>
+  <text x="28" y="258" class="handle">Atualizado pela API do GitHub</text>
+</svg>

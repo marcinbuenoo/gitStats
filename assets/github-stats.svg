@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" role="img" aria-label="General statistics for marcinbuenoo">
+  <style>
+    .title { font: 700 20px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: #f0f6fc; }
+    .handle { font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: #8b949e; }
+    .label { font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: #8b949e; }
+    .value { font: 700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill: #f0f6fc; }
+  </style>
+  <rect x="0.5" y="0.5" width="399" height="259" rx="12" fill="#0d1117" stroke="#30363d"/>
+  <rect x="28" y="30" width="5" height="45" rx="2.5" fill="#58a6ff"/>
+  <text x="47" y="50" class="title">Márcio Roberto Bueno Júnior</text>
+  <text x="47" y="70" class="handle">@marcinbuenoo</text>
+  <line x1="28" y1="90" x2="372" y2="90" stroke="#30363d"/>
+  <text x="28" y="118" class="label">Repositórios públicos</text><text x="372" y="118" text-anchor="end" class="value">36</text><text x="28" y="150" class="label">Estrelas recebidas</text><text x="372" y="150" text-anchor="end" class="value">10</text><text x="28" y="182" class="label">Seguidores</text><text x="372" y="182" text-anchor="end" class="value">10</text><text x="28" y="214" class="label">Seguindo</text><text x="372" y="214" text-anchor="end" class="value">16</text>
+  <text x="28" y="238" class="handle">Atualizado pela API do GitHub</text>
+</svg>
